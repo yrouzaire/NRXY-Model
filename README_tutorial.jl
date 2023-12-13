@@ -42,7 +42,7 @@ z = @elapsed evolve!(thetas, model, lattice, duration) # For a given duration
 model.t # Now the current time of the model = dt + duration
 prinz(z) # prints the rounded runtime of this function call
 tmax = 50
-evolve!(thetas, model, lattice, tmax=tmax) # Until a given time
+evolve!(thetas, model, lattice, tmax) # Until a given time
 model.t # Now the current time of the model = tmax, no matter what was done before
 # equivalently, if one wants to perform measurements over time
 tmax2 = 60
@@ -54,7 +54,7 @@ end
 # Visualise the system
 plot_thetas(thetas, model, lattice, defects=false)
 plot_thetas(thetas, model, lattice, defects=true) # circle = +1 defect, triangle = -1 defect
-#= WARNING: plotting the defects can take enormous time if they are to many.
+#= WARNING: plotting the defects can take enormous time if they are to many (~ > 100).
 It is recommended to first plot with `defects=false` (the default value) to evaluate visually
 the number of defects. =#
 
@@ -73,23 +73,23 @@ annotate!((0.85ξ, 0.1, text("r = ξ", 7, :center, 90.0)))
 ## Create a movie
 lattice = SquareLattice(L)
 model = LangevinXY(params)
-thetas = init_thetas(model, lattice, params_init=params_init)
+thetas = init_thetas(model, lattice, params_init)
 every = 1;
 tmax = 200;
 transients = 50; # defects are not plotted before t ≥ transients (if defects=true)
 saving_times = every:every:tmax
 z = @elapsed animation = movies(thetas, model, lattice, defects=true, saving_times=saving_times, transients=transients)
-prinz(z) # takes approximately 2 minutes, you can make yourself a coffee
+prinz(z) # takes approximately 1 minute
 filename = "films/my_first_movie_of_critical_XY_model.mp4"
 mp4(animation, filename, fps=20) # creates the file in the given directory
 # open manually the .mp4 file
 
-## Visualise the flow field
+## Visualise the theta field
 plot_thetas(thetas, model, lattice)
 
 # At random loc
 xlocation, ylocation = (50, 50)
-half_width_of_window = 10 # not too big because plotting the arrows is damn slow
+half_width_of_window = 10 # not too big because plotting the arrows can be damn slow
 zoom_quiver(thetas, model, lattice, xlocation, ylocation, half_width_of_window)
 
 # Where are the defects ?
@@ -106,12 +106,12 @@ zoom_quiver(thetas, model, lattice, xlocation, ylocation, half_width_of_window)
 
 ## Explore the different initialisations
 params_init["init"] = "hightemp" # equivalent of "disordered"
-thetas = init_thetas(model, lattice, params_init=params_init)
+thetas = init_thetas(model, lattice, params_init)
 plot_thetas(thetas, model, lattice)
 
 params_init["init"] = "lowtemp" # equivalent of "ordered"
-thetas = init_thetas(model, lattice, params_init=params_init)
-plot_thetas(thetas, model, lattice)
+thetas = init_thetas(model, lattice, params_init)
+plot_thetas(thetas, model, lattice) # everything is black, because the system is ordered (theta=0)
 
 # For a +1 defect, one should provide the initial µ ∈ [0,2π] "mu0" (µ = 0 is a source, µ = ± π/2 is a vortex, µ = π is a sink)
 params_init["init"] = "single";
@@ -120,7 +120,7 @@ mu0s = [0, π / 3, π, 5π / 3]
 pp = []
 for mu0 in mu0s
     params_init["mu0"] = mu0
-    thetas = init_thetas(model, lattice, params_init=params_init)
+    thetas = init_thetas(model, lattice, params_init)
     plott = zoom_quiver(thetas, model, lattice, 50, 50)
     title!(plott, "µ = $(round(mu0, digits=2))")
     push!(pp, plott)
@@ -134,7 +134,7 @@ mu0s = [0, π / 3, π, 5π / 3]
 pp = []
 for mu0 in mu0s
     params_init["mu0"] = mu0
-    thetas = init_thetas(model, lattice, params_init=params_init)
+    thetas = init_thetas(model, lattice, params_init)
     plott = zoom_quiver(thetas, model, lattice, 50, 50)
     title!(plott, "µ = $(round(mu0, digits=2))")
     push!(pp, plott)
@@ -145,9 +145,9 @@ plot(pp..., layout=(2, 2), size=(1000, 1000))
 ## For pairs of defects, one has to 
 params_init["init"] = "pair";
 params_init["r0"] = round(Int, L / 2);
-muplus, muminus, phii = pi / 2, pi, nothing # one of the three MUST be nothing because only two of them are linearly independent
+muplus, muminus, phii = pi / 2, nothing, pi/8 # one of the three MUST be nothing because only two of them are linearly independent
 params_init["mu_plus"] = muplus;
 params_init["mu_minus"] = muminus;
 params_init["phi"] = phii
-thetas = init_thetas(model, lattice, params_init=params_init)
+thetas = init_thetas(model, lattice, params_init)
 plot_thetas(thetas, model, lattice)
