@@ -89,8 +89,9 @@ Motivation for implementing lattices different from the standard square one:
 
 ### Implementation
 Nothing exotic to say about the `SquareLattice`, the implementation is straightforward.
-On the other hand, he TriangularLattice is somewhat more technical, so that it could be represented by a usual Matrix.
-The trick is to modify the neighbourhood depending on the parity of the row of the considered site, cf. `get_neighbours(thetas,model,lattice::TriangularLattice,i,j)` in the file `core_methods.jl`
+On the other hand, the TriangularLattice is somewhat more technical, so that it could be represented by a usual Matrix.
+The trick is to modify the neighbourhood depending on the parity of the row of the considered site, cf. `get_neighbours(thetas,model,lattice::TriangularLattice,i,j)` in the file `core_methods.jl`.
+A visual explanation is provided in the Supplementary Material of our article "Non-Reciprocal Interactions Reshape Topological Defect Annihilation". 
 
 ## models.jl
 The file where all the models are defined.
