@@ -575,7 +575,7 @@ end
 
 function zoom_quiver(thetas, model, lattice::Abstract2DLattice, i, j, window=WINDOW; defects=false, size=(400, 400))
     L = lattice.L
-    no_problem_go_ahead, thetas_zoom = zoom(thetas, lattice, j,i, window) # j<->i on purpose
+    no_problem_go_ahead, thetas_zoom = zoom(thetas, lattice, i,j, window)
     if no_problem_go_ahead
         p = plot_thetas(thetas_zoom, model, lattice, defects=defects, size=size)
         display_quiver!(p, thetas_zoom, lattice, window=window)
@@ -589,7 +589,7 @@ end
 
 
 ## ------------------------ Movies  ------------------------
-function movies(thetas, model, lattice; defects=false, saving_times, transients=Inf, title=titre)
+function movies(thetas, model, lattice; defects=false, saving_times, transients=Inf, title="")
     anim = @animate for time in saving_times
         println("$(round(time/saving_times[end]*100,digits=2)) %")
         evolve!(thetas, model, lattice, time)  # updates until time = t
@@ -598,7 +598,7 @@ function movies(thetas, model, lattice; defects=false, saving_times, transients=
         else
             p = plot_thetas(thetas, model, lattice, defects=defects, size=(512, 512))
         end
-        title!(titre * "\n t = $(round(time,digits=1))")
+        title!(title * "\n t = $(round(time,digits=1))")
     end
     return anim
 end
