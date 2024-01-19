@@ -36,8 +36,8 @@ end
 
 
 ## ------------- Numerical Parameters ------------- ## 
-dt = Tf(1E-5)
-dt = Tf(1E-1)
+#dt = Tf(1E-5)
+dt = Tf(0.1)
 wrapsT = 16  # for GPU
 block3D = (wrapsT,wrapsT,1) # for GPU
 R = 10
