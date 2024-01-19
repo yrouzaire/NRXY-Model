@@ -45,7 +45,7 @@ tmax = 50
 evolve!(thetas, model, lattice, tmax) # Until a given time
 model.t # Now the current time of the model = tmax, no matter what was done before
 # equivalently, if one wants to perform measurements over time
-tmax2 = 60
+tmax2 = 80
 while model.t < tmax2
     update!(thetas, model, lattice)
     # perform measurements
@@ -82,11 +82,12 @@ z = @elapsed animation = movies(thetas, model, lattice, defects=true, saving_tim
 prinz(z) # takes approximately 1 minute
 filename = "films/my_first_movie_of_critical_XY_model.mp4"
 mp4(animation, filename, fps=20) # creates the file in the given directory
-# open manually the .mp4 file
+# you have to open manually the .mp4 file
 
-## Visualise the theta field
+## Visualise the theta field at current (final) time
 plot_thetas(thetas, model, lattice)
 
+# Now if you want to visualize the arrows, you have to zoom in
 # At random loc
 xlocation, ylocation = (50, 50)
 half_width_of_window = 10 # not too big because plotting the arrows can be damn slow
